@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexxia / Tepremia — Agente IA Enterprise</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a1628 0%, #1a2d4d 50%, #0f2847 100%);
+            color: #e0e8f0;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(29, 78, 216, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(56, 189, 248, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 40px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .header::before {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 5px;
+            background: linear-gradient(90deg, #0ea5e9, #06b6d4, #0ea5e9);
+            margin: 0 auto 30px;
+            border-radius: 3px;
+            box-shadow: 0 0 20px rgba(14, 165, 233, 0.5);
+        }
+
+        .logo-text {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #0ea5e9, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+        
+        .title {
+            font-size: 42px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+        }
+        
+        .description {
+            font-size: 15px;
+            color: #b0bac9;
+            line-height: 1.8;
+            max-width: 650px;
+            margin: 0 auto;
+            font-weight: 500;
+        }
+        
+        .form-wrapper {
+            margin-top: 60px;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+            animation: fadeInUp 0.6s ease;
+            animation-fill-mode: both;
+        }
+
+        .section:nth-child(1) { animation-delay: 0.1s; }
+        .section:nth-child(2) { animation-delay: 0.2s; }
+        .section:nth-child(3) { animation-delay: 0.3s; }
+        .section:nth-child(4) { animation-delay: 0.4s; }
+        .section:nth-child(5) { animation-delay: 0.5s; }
+        .section:nth-child(6) { animation-delay: 0.6s; }
+        
+        .section-header {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 58, 138, 0.6));
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 32px;
+            border-left: 4px solid #0ea5e9;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(14, 165, 233, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.1), transparent);
+            border-radius: 50%;
+        }
+        
+        .section-number {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #0ea5e9, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #38bdf8;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-guide {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-top: 10px;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(14, 165, 233, 0.3), transparent);
+            margin: 50px 0;
+        }
+        
+        .form-group {
+            margin-bottom: 32px;
+        }
+        
+        .question-label {
+            font-size: 16px;
+            font-weight: 700;
+            color: #e0e8f0;
+            margin-bottom: 14px;
+            display: block;
+            letter-spacing: -0.3px;
+        }
+        
+        .required {
+            color: #f87171;
+        }
+        
+        .help-text {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 8px;
+            font-style: italic;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(14, 165, 233, 0.15);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .checkbox-item:hover {
+            background: rgba(14, 165, 233, 0.1);
+            border-color: rgba(14, 165, 233, 0.4);
+        }
+        
+        .checkbox-item input[type="checkbox"],
+        .checkbox-item input[type="radio"] {
+            margin-right: 12px;
+            accent-color: #0ea5e9;
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+        
+        .checkbox-item label {
+            cursor: pointer;
+            font-size: 14px;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+        
+        .text-input,
+        .textarea,
+        .file-input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            border-radius: 8px;
+            background: rgba(15, 23, 42, 0.6);
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #e0e8f0;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .text-input::placeholder,
+        .textarea::placeholder {
+            color: #64748b;
+        }
+        
+        .text-input:focus,
+        .textarea:focus {
+            outline: none;
+            border-color: #0ea5e9;
+            background: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15), 0 0 20px rgba(14, 165, 233, 0.2);
+        }
+        
+        .textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+        
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        @media (max-width: 600px) {
+            .input-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .title {
+                font-size: 32px;
+            }
+        }
+        
+        .input-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 14px;
+            margin-top: 50px;
+        }
+        
+        .btn {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+            color: #0a1628;
+            flex: 1;
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:hover {
+            box-shadow: 0 12px 32px rgba(14, 165, 233, 0.6);
+            transform: translateY(-3px);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: rgba(14, 165, 233, 0.15);
+            color: #38bdf8;
+            flex: 1;
+            border: 1px solid rgba(14, 165, 233, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(14, 165, 233, 0.25);
+            border-color: rgba(14, 165, 233, 0.6);
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.2);
+        }
+        
+        .success-screen {
+            display: none;
+            text-align: center;
+            padding: 80px 40px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .success-screen.show {
+            display: flex;
+            animation: fadeInUp 0.6s ease;
+        }
+        
+        .success-icon {
+            font-size: 80px;
+            margin-bottom: 24px;
+            animation: scaleIn 0.6s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .success-title {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #38bdf8, #0ea5e9, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+        
+        .success-message {
+            font-size: 15px;
+            color: #b0bac9;
+            max-width: 500px;
+            line-height: 1.8;
+            font-weight: 500;
+        }
+        
+        .reset-link {
+            margin-top: 40px;
+        }
+        
+        .reset-link a {
+            color: #0ea5e9;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+        
+        .reset-link a:hover {
+            color: #38bdf8;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(14, 165, 233, 0.3);
+            border-top-color: #0ea5e9;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="formContainer" class="form-wrapper">
+            <div class="header">
+                <div class="logo-text">Nexxia × Nabu</div>
+                <h1 class="title">Agente IA Empresarial</h1>
+                                    <p class="description">
+                    Formulario de especificaciones técnicas para implementación de agente conversacional inteligente. Proporcione información breve, concreta y específica para optimizar la propuesta comercial.
+                </p>
+            </div>
+
+            <form id="mainForm">
+                <!-- SECCIÓN 1: ALCANCE DEL AGENTE IA -->
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-number">• Sección 1</div>
+                        <h2 class="section-title">Alcance Funcional del Agente</h2>
+                        <p class="section-guide">Describa las capacidades operacionales iniciales</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="question-label">¿Qué funciones iniciales desean habilitar? <span class="required">*</span></label>
+                        <textarea name="functions_open" class="textarea" placeholder="Ej: Consultas de puntos, procesamiento de canjes, historial transaccional, soporte técnico nivel 1..."></textarea>
+                        <p class="help-text">Máximo 500 caracteres sugerido</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="question-label">¿Qué canales desean habilitar desde el inicio? <span class="required">*</span></label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="ch1" name="channels" value="whatsapp">
+                                <label for="ch1">WhatsApp Business</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="ch2" name="channels" value="sms">
+                                <label for="ch2">SMS / RCS</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="ch3" name="channels" value="voz">
+                                <label for="ch3">Voz / IVR</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="ch4" name="channels" value="web">
+                                <label for="ch4">Web Chat / App Integrada</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- SECCIÓN 2: INTEGRACIÓN DE DATOS -->
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-number">• Sección 2</div>
+                        <h2 class="section-title">Arquitectura de Datos</h2>
+                        <p class="section-guide">Capacidades de lectura y acceso de información</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="question-label">¿Cuentan con API para acceso a datos en tiempo real? <span class="required">*</span></label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="radio" id="api_yes" name="apiAccess" value="si">
+                                <label for="api_yes">Sí, contamos con APIs disponibles</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" id="api_no" name="apiAccess" value="no">
+                                <label for="api_no">No, requiere integración inicial</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="question-label">¿Qué datos están disponibles para consulta? <span class="required">*</span></label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="data1" name="dataTypes" value="puntos">
+                                <label for="data1">Saldo de puntos / Rewards</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="data2" name="dataTypes" value="nivel">
+                                <label for="data2">Nivel de membresía / Tier</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="data3" name="dataTypes" value="canjes">
+                                <label for="data3">Historial de canjes</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="data4" name="dataTypes" value="transacciones">
+                                <label for="data4">Transacciones recientes</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="data5" name="dataTypes" value="beneficios">
+                                <label for="data5">Beneficios y ofertas activas</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- SECCIÓN 3: DIMENSIONAMIENTO DEL VOLUMEN -->
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-number">• Sección 3</div>
+                        <h2 class="section-title">Dimensionamiento de Carga</h2>
+                        <p class="section-guide">Volumen estimado para calibración de infraestructura</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="question-label">¿Cuál es el volumen aproximado mensual por canal? <span class="required">*</span></label>
+                        <p class="help-text">Rangos o estimados son suficientes (ej: 5000, 10k-15k, 50k+)</p>
+                        
+                        <div style="margin-top: 18px;">
+                            <div class="input-row">
+                                <div>
+                                    <label class="input-label">WhatsApp</label>
+                                    <input type="text" name="volume_whatsapp" placeholder="Ej: 5000" class="text-input">
+                                </div>
+                                <div>
+                                    <label class="input-label">SMS</label>
+                                    <input type="text" name="volume_sms" placeholder="Ej: 2000" class="text-input">
+                                </div>
+                            </div>
+                            <div style="margin-top: 14px;">
+                                <label class="input-label">Voz</label>
+                                <input type="text" name="volume_voz" placeholder="Ej: 500" class="text-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- SECCIÓN 4: ESCALACIONES HUMANAS -->
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-number">• Sección 4</div>
+                        <h2 class="section-title">Protocolos de Escalación</h2>
+                        <p class="section-guide">Criterios para transferencia a agentes humanos</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="question-label">¿Qué casos deben escalarse automáticamente a un agente humano?</label>
+                        <textarea name="escalations" class="textarea" placeholder="Ej: Solicitudes de reembolso, quejas complejas, cambios de nivel, gestiones legales..."></textarea>
+                        <p class="help-text">Máximo 200 caracteres sugerido</p>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- SECCIÓN 5: REGLAS / RESTRICCIONES -->
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-number">• Sección 5</div>
+                        <h2 class="section-title">Reglas Operacionales</h2>
+                        <p class="section-guide">Restricciones y directrices del sistema</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="question-label">¿Hay alguna regla específica que el agente deba respetar?</label>
+                        <textarea name="restrictions" class="textarea" placeholder="Ej: Tono corporativo formal, montos máximos por transacción, validaciones de cumplimiento normativo..."></textarea>
+                        <p class="help-text">Máximo 300 caracteres. Incluya restricciones legales, de marca o técnicas.</p>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- SECCIÓN 6: DOCUMENTACIÓN EXISTENTE -->
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-number">• Sección 6</div>
+                        <h2 class="section-title">Documentación de Referencia</h2>
+                        <p class="section-guide">Materiales existentes para calibración del modelo</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="question-label">Subir documentación (opcional)</label>
+                        <input type="file" name="documentation" class="file-input" accept=".pdf,.doc,.docx,.txt,.xlsx,.pptx">
+                        <p class="help-text">Formatos soportados: PDF, Word, Excel, PowerPoint, TXT</p>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- BOTONES DE ACCIÓN -->
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()">Limpiar Formulario</button>
+                    <button type="submit" class="btn btn-primary">Enviar Especificaciones</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- PANTALLA DE ÉXITO -->
+        <div id="successScreen" class="success-screen">
+            <div class="success-icon">✓</div>
+            <h2 class="success-title">Propuesta en Construcción</h2>
+            <p class="success-message">
+                Hemos recibido sus especificaciones técnicas. Nuestro equipo de arquitectos IA está procesando la información para construir la propuesta comercial personalizada de Agente Conversacional para Nexxia × Nabu. Nos comunicaremos en las próximas 48 horas.
+            </p>
+            <div class="reset-link">
+                <a onclick="backToForm()">← Volver al formulario</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('mainForm');
+        const successScreen = document.getElementById('successScreen');
+        const formContainer = document.getElementById('formContainer');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validar campos requeridos
+            const functionsOpen = document.querySelector('textarea[name="functions_open"]').value.trim();
+            const channels = document.querySelectorAll('input[name="channels"]:checked').length;
+            const apiAccess = document.querySelector('input[name="apiAccess"]:checked');
+            const dataTypes = document.querySelectorAll('input[name="dataTypes"]:checked').length;
+
+            if (functionsOpen === '') {
+                alert('Por favor describe las funciones iniciales que desean habilitar.');
+                return;
+            }
+            if (channels === 0) {
+                alert('Por favor selecciona al menos un canal de comunicación.');
+                return;
+            }
+            if (!apiAccess) {
+                alert('Por favor especifica si cuentan con API para acceso a datos.');
+                return;
+            }
+            if (dataTypes === 0) {
+                alert('Por favor selecciona al menos un tipo de dato disponible.');
+                return;
+            }
+
+            // Recolectar datos del formulario
+            const channelsSelected = Array.from(document.querySelectorAll('input[name="channels"]:checked')).map(el => el.value);
+            const dataTypesSelected = Array.from(document.querySelectorAll('input[name="dataTypes"]:checked')).map(el => el.value);
+            
+            const formData = {
+                timestamp: new Date().toLocaleString('es-MX'),
+                funciones: functionsOpen,
+                canales: channelsSelected.join(', '),
+                apiAcceso: apiAccess.value,
+                datosDisponibles: dataTypesSelected.join(', '),
+                volumenWhatsApp: document.querySelector('input[name="volume_whatsapp"]').value || '-',
+                volumenSMS: document.querySelector('input[name="volume_sms"]').value || '-',
+                volumenVoz: document.querySelector('input[name="volume_voz"]').value || '-',
+                escalaciones: document.querySelector('textarea[name="escalations"]').value || '-',
+                restricciones: document.querySelector('textarea[name="restrictions"]').value || '-'
+            };
+
+            // Enviar a Google Sheets
+            sendToGoogleSheets(formData);
+        });
+
+        function sendToGoogleSheets(data) {
+            const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby50gK7hW1azFiDXoXokCA7Y48CGFCoabA_QfXWMnmqTSAzDP8D6PTmEIdTMmOuxxdtmQ/exec';
+            
+            const submitBtn = document.querySelector('.btn-primary');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Enviando...';
+            submitBtn.disabled = true;
+
+            console.log('Enviando datos:', data);
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify(data),
+                mode: 'no-cors'
+            })
+            .then(response => {
+                console.log('Respuesta del servidor recibida:', response);
+                // Esperar un poco para asegurar que se guardó
+                setTimeout(() => {
+                    console.log('Mostrando pantalla de éxito');
+                    formContainer.style.display = 'none';
+                    successScreen.classList.add('show');
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }, 1500);
+            })
+            .catch(error => {
+                console.error('Error en la solicitud:', error);
+                alert('Hubo un error al enviar el formulario. Por favor intenta de nuevo. Error: ' + error.message);
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            });
+        }
+
+        function resetForm() {
+            form.reset();
+        }
+
+        function backToForm() {
+            successScreen.classList.remove('show');
+            formContainer.style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
